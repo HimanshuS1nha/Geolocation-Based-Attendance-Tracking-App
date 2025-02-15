@@ -1,6 +1,15 @@
+import { router, useRootNavigationState } from "expo-router";
+import { useEffect } from "react";
 import { Text, View } from "react-native";
 
 export default function Index() {
+  const rootNavigationState = useRootNavigationState();
+
+  useEffect(() => {
+    if (rootNavigationState?.key) {
+      router.replace("/onboarding");
+    }
+  }, [rootNavigationState?.key]);
   return (
     <View
       style={{
