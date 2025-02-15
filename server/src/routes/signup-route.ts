@@ -6,6 +6,7 @@ import { prisma } from "../libs/db";
 
 import { getCompanyByEmail } from "../helpers/get-company-by-email";
 import { saveImage } from "../helpers/save-image";
+import { createAndSendOtp } from "../helpers/create-and-send-otp";
 
 import { signupValidator } from "../validators/signup-validator";
 
@@ -44,7 +45,7 @@ signupRouter.post("/", async (req, res) => {
       },
     });
 
-    //! SEND OTP VIA EMAIL
+    await createAndSendOtp(email, "company");
 
     res
       .status(200)
