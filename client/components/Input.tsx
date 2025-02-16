@@ -6,20 +6,20 @@ const Input = ({
   onChangeText,
   style,
   value,
-  placeHolder,
+  placeholder,
   secureTextEntry,
 }: {
   value: string;
-  placeHolder: string;
+  placeholder: string;
   onChangeText: (text: string) => void;
   style?: StyleProp<TextInputProps>;
   secureTextEntry?: boolean;
 }) => {
   return (
     <TextInput
-      style={[tw`bg-gray-200 px-3 py-5 rounded-lg`, style]}
+      style={[tw`bg-gray-200 px-3 py-5 rounded-lg w-full`, style]}
       value={value}
-      placeholder={placeHolder}
+      placeholder={placeholder}
       onChangeText={onChangeText}
       secureTextEntry={secureTextEntry}
     />
