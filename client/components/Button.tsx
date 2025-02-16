@@ -4,12 +4,14 @@ import tw from "twrnc";
 
 const Button = ({
   variant = "default",
+  textSize = "default",
   disabled,
   children,
   onPress,
   style,
 }: {
   variant?: "default" | "outline";
+  textSize?: "default" | "sm";
   disabled?: boolean;
   children: React.ReactNode;
   onPress?: () => void;
@@ -35,7 +37,7 @@ const Button = ({
       <Text
         style={tw`${
           variant === "default" ? "text-white" : "text-indigo-600"
-        } font-medium`}
+        } font-medium ${textSize === "default" ? "text-base" : "text-sm"}`}
       >
         {disabled ? "Please wait..." : children}
       </Text>
