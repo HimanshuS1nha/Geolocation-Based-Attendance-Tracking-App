@@ -5,6 +5,7 @@ import { Server } from "socket.io";
 import { signupRouter } from "./routes/signup-route";
 import { loginRouter } from "./routes/login-route";
 import { resendOtpRouter } from "./routes/resend-otp-route";
+import { changePasswordRouter } from "./routes/change-password-route";
 
 import { addEmployeeRouter } from "./routes/add-employee-route";
 
@@ -19,6 +20,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/signup", signupRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/resend-otp", resendOtpRouter);
+app.use("/api/change-password", changePasswordRouter);
 
 app.use("/api/add-employee", addEmployeeRouter);
 
