@@ -3,6 +3,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 
 import { signupRouter } from "./routes/signup-route";
+import { loginRouter } from "./routes/login-route";
 
 const app = express();
 const server = createServer(app);
@@ -13,6 +14,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use("/uploads", express.static("uploads"));
 
 app.use("/api/signup", signupRouter);
+app.use("/api/signup", loginRouter);
 
 io.on("connection", (socket) => {
   console.log(`${socket.id} Joined`);
