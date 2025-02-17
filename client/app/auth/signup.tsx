@@ -1,12 +1,18 @@
-import { View, Text, ScrollView, Image, Pressable } from "react-native";
+import { View, Text, ScrollView, Image, Pressable, Alert } from "react-native";
 import React, { useState, useCallback } from "react";
 import tw from "twrnc";
 import * as ImagePicker from "expo-image-picker";
 import { FontAwesome, AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { ZodError } from "zod";
+import { router } from "expo-router";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import OAuthProviders from "@/components/OAuthProviders";
+
+import { signupValidator } from "@/validators/signup-validator";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -48,6 +54,54 @@ const Signup = () => {
       setFileBase64(result.assets[0].base64 || "");
     }
   }, []);
+
+  const { mutate: handleSignup, isPending } = useMutation({
+    mutationKey: ["signup"],
+    mutationFn: async () => {
+      const parsedData = await signupValidator.parseAsync({
+        name,
+        email,
+        password,
+        confirmPassword,
+        fileName,
+        fileBase64,
+      });
+      if (parsedData.password !== parsedData.confirmPassword) {
+        throw new Error("Passwords do not match");
+      }
+
+      const { data } = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/api/signup`,
+        { ...parsedData }
+      );
+
+      return data as { message: string };
+    },
+    onSuccess: (data) => {
+      Alert.alert("Success", data.message, [
+        {
+          text: "Ok",
+          onPress: () =>
+            router.push({
+              pathname: "/auth/verify",
+              params: {
+                email,
+                type: "company",
+              },
+            }),
+        },
+      ]);
+    },
+    onError: (error) => {
+      if (error instanceof ZodError) {
+        Alert.alert("Error", error.errors[0].message);
+      } else if (error instanceof AxiosError && error.response?.data.error) {
+        Alert.alert("Error", error.response.data.error);
+      } else {
+        Alert.alert("Error", error.message);
+      }
+    },
+  });
   return (
     <View style={tw`flex-1 bg-white`}>
       <ScrollView contentContainerStyle={tw`pb-4 px-4 gap-y-9`}>
@@ -56,34 +110,36 @@ const Signup = () => {
         </Text>
 
         <View style={tw`gap-y-3.5 items-center`}>
-        {fileBase64 ? (
-          <View style={tw`items-center justify-center`}>
-            <Image
-              source={{
-                uri: `data:image/png;base64,${fileBase64}`,
-              }}
-              style={tw`size-28 rounded-full`}
-            />
-            <Pressable
-              style={tw`absolute bg-emerald-600 bottom-0 right-0 p-2 rounded-full z-10 shadow shadow-black`}
-              onPress={pickImage}
+          {fileBase64 ? (
+            <View style={tw`items-center justify-center`}>
+              <Image
+                source={{
+                  uri: `data:image/png;base64,${fileBase64}`,
+                }}
+                style={tw`size-28 rounded-full`}
+              />
+              <Pressable
+                style={tw`absolute bg-emerald-600 bottom-0 right-0 p-2 rounded-full z-10 shadow shadow-black`}
+                onPress={pickImage}
+                disabled={isPending}
+              >
+                <MaterialIcons name="change-circle" size={26} color="white" />
+              </Pressable>
+            </View>
+          ) : (
+            <View
+              style={tw`size-28 rounded-full bg-gray-300 items-center justify-center`}
             >
-              <MaterialIcons name="change-circle" size={26} color="white" />
-            </Pressable>
-          </View>
-        ) : (
-          <View
-            style={tw`size-28 rounded-full bg-gray-300 items-center justify-center`}
-          >
-            <FontAwesome name="user" size={60} color={"white"} />
-            <Pressable
-              style={tw`absolute bg-emerald-600 bottom-0 right-0 p-2 rounded-full z-10 shadow shadow-black`}
-              onPress={pickImage}
-            >
-              <AntDesign name="plus" size={26} color="white" />
-            </Pressable>
-          </View>
-        )}
+              <FontAwesome name="user" size={60} color={"white"} />
+              <Pressable
+                style={tw`absolute bg-emerald-600 bottom-0 right-0 p-2 rounded-full z-10 shadow shadow-black`}
+                onPress={pickImage}
+                disabled={isPending}
+              >
+                <AntDesign name="plus" size={26} color="white" />
+              </Pressable>
+            </View>
+          )}
 
           <Input
             placeholder="Enter company's name"
@@ -109,7 +165,9 @@ const Signup = () => {
           />
         </View>
 
-        <Button>Signup</Button>
+        <Button onPress={handleSignup} disabled={isPending}>
+          Signup
+        </Button>
 
         <OAuthProviders text="Or Register with" />
       </ScrollView>

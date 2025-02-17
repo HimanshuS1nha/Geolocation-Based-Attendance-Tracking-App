@@ -103,7 +103,7 @@ const Login = () => {
         </View>
       </View>
 
-      <Button onPress={() => handleLogin()} disabled={isPending}>
+      <Button onPress={handleLogin} disabled={isPending}>
         Login
       </Button>
 
