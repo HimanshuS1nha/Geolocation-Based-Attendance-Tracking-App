@@ -3,6 +3,7 @@ import React from "react";
 import { Pressable, Image } from "react-native";
 import tw from "twrnc";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 import { useUser } from "@/hooks/useUser";
 
@@ -14,7 +15,7 @@ const CompanyTabsLayout = () => {
         headerTitle: "GeoAttendance",
         headerRight: () => {
           return (
-            <Pressable>
+            <Pressable onPress={() => router.push("/company/profile")}>
               <Image
                 source={{
                   uri: user?.image,
