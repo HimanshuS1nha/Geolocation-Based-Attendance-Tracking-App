@@ -59,9 +59,9 @@ const Login = () => {
             setUser(data.user);
             router.dismissAll();
             if (data.user.type === "company") {
-              //! Push to company home page
+              router.replace("/company/home");
             } else if (data.user.type === "employee") {
-              //! push to employee home page
+              router.replace("/employee/home");
             }
           },
         },
