@@ -11,6 +11,7 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 
 import { emailValidator } from "@/validators/email-validator";
+import { verifyOtpValidator } from "@/validators/verify-otp-validator";
 
 const Verify = () => {
   const { email, type } = useLocalSearchParams() as {
@@ -47,6 +48,40 @@ const Verify = () => {
       }
     },
   });
+
+  const { mutate: handleVerifyOtp, isPending: verifyOtpPending } = useMutation({
+    mutationKey: ["verify-otp"],
+    mutationFn: async () => {
+      const parsedData = await verifyOtpValidator.parseAsync({ email, otp });
+
+      const { data } = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/api/verify-otp/${type}`,
+        { ...parsedData }
+      );
+
+      return data as { message: string };
+    },
+    onSuccess: (data) => {
+      Alert.alert("Success", data.message, [
+        {
+          text: "Ok",
+          onPress: () => {
+            router.dismissAll();
+            router.push({ pathname: "/auth/login", params: { type } });
+          },
+        },
+      ]);
+    },
+    onError: (error) => {
+      if (error instanceof ZodError) {
+        Alert.alert("Error", error.errors[0].message);
+      } else if (error instanceof AxiosError && error.response?.data.error) {
+        Alert.alert("Error", error.response.data.error);
+      } else {
+        Alert.alert("Error", "Some error occured. Please try again later!");
+      }
+    },
+  });
   return (
     <View style={tw`flex-1 bg-white px-4 gap-y-7`}>
       <Text style={tw`text-3xl font-medium mt-4`}>
@@ -65,7 +100,7 @@ const Verify = () => {
         <View style={tw`items-end`}>
           <Pressable
             onPress={() => handleResendOtp()}
-            disabled={resendOtpPending}
+            disabled={resendOtpPending || verifyOtpPending}
           >
             <Text
               style={tw`font-medium ${
@@ -78,7 +113,12 @@ const Verify = () => {
         </View>
       </View>
 
-      <Button>Verify</Button>
+      <Button
+        onPress={handleVerifyOtp}
+        disabled={resendOtpPending || verifyOtpPending}
+      >
+        Verify
+      </Button>
     </View>
   );
 };

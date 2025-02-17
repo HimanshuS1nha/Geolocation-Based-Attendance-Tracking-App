@@ -99,7 +99,7 @@ const Login = () => {
           secureTextEntry
         />
         <View style={tw`items-end`}>
-          <Text style={tw`text-gray-500 font-bold`}>Forgot Password?</Text>
+          <Text style={tw`text-indigo-600 font-bold`}>Forgot Password?</Text>
         </View>
       </View>
 
@@ -107,24 +107,25 @@ const Login = () => {
         Login
       </Button>
 
-      <OAuthProviders text="Or Login with" />
-
       {type === "company" && (
-        <View style={tw`justify-center items-center flex-row gap-x-1`}>
-          <Text>Don&apos;t have an account?</Text>
-          <Pressable
-            onPress={() => router.push({ pathname: "/auth/signup" })}
-            disabled={isPending}
-          >
-            <Text
-              style={tw`${
-                isPending ? "text-indigo-400" : "text-indigo-600"
-              } text-base font-semibold`}
+        <>
+          <OAuthProviders text="Or Login with" />
+          <View style={tw`justify-center items-center flex-row gap-x-1`}>
+            <Text>Don&apos;t have an account?</Text>
+            <Pressable
+              onPress={() => router.push({ pathname: "/auth/signup" })}
+              disabled={isPending}
             >
-              Signup
-            </Text>
-          </Pressable>
-        </View>
+              <Text
+                style={tw`${
+                  isPending ? "text-indigo-400" : "text-indigo-600"
+                } text-base font-semibold`}
+              >
+                Signup
+              </Text>
+            </Pressable>
+          </View>
+        </>
       )}
     </View>
   );
