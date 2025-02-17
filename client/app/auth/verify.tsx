@@ -1,10 +1,16 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, Alert } from "react-native";
 import React, { useState, useCallback } from "react";
 import tw from "twrnc";
 import { useLocalSearchParams } from "expo-router";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { ZodError } from "zod";
+import { router } from "expo-router";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+
+import { emailValidator } from "@/validators/email-validator";
 
 const Verify = () => {
   const { email, type } = useLocalSearchParams() as {
@@ -15,6 +21,32 @@ const Verify = () => {
   const [otp, setOtp] = useState("");
 
   const handleChangeText = useCallback((value: string) => setOtp(value), []);
+
+  const { mutate: handleResendOtp, isPending: resendOtpPending } = useMutation({
+    mutationKey: ["resend-otp"],
+    mutationFn: async () => {
+      const parsedData = await emailValidator.parseAsync({ email });
+
+      const { data } = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/api/resend-otp/${type}`,
+        { ...parsedData }
+      );
+
+      return data as { message: string };
+    },
+    onSuccess: (data) => {
+      Alert.alert("Success", data.message);
+    },
+    onError: (error) => {
+      if (error instanceof ZodError) {
+        Alert.alert("Error", error.errors[0].message);
+      } else if (error instanceof AxiosError && error.response?.data.error) {
+        Alert.alert("Error", error.response.data.error);
+      } else {
+        Alert.alert("Error", "Some error occured. Please try again later!");
+      }
+    },
+  });
   return (
     <View style={tw`flex-1 bg-white px-4 gap-y-7`}>
       <Text style={tw`text-3xl font-medium mt-4`}>
@@ -27,11 +59,21 @@ const Verify = () => {
           value={otp}
           onChangeText={handleChangeText}
           maxLength={6}
+          keyboardType="number-pad"
         />
 
         <View style={tw`items-end`}>
-          <Pressable>
-            <Text style={tw`font-medium text-indigo-600`}>Resend OTP</Text>
+          <Pressable
+            onPress={() => handleResendOtp()}
+            disabled={resendOtpPending}
+          >
+            <Text
+              style={tw`font-medium ${
+                resendOtpPending ? "text-indigo-400" : "text-indigo-600"
+              }`}
+            >
+              {resendOtpPending ? "Please wait..." : "Resend OTP"}
+            </Text>
           </Pressable>
         </View>
       </View>

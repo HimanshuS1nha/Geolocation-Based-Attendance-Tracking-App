@@ -9,6 +9,7 @@ const Input = ({
   placeholder,
   secureTextEntry,
   maxLength,
+  keyboardType,
 }: {
   value: string;
   placeholder: string;
@@ -16,6 +17,7 @@ const Input = ({
   style?: StyleProp<TextInputProps>;
   secureTextEntry?: boolean;
   maxLength?: number;
+  keyboardType?: "number-pad";
 }) => {
   return (
     <TextInput
@@ -25,6 +27,7 @@ const Input = ({
       onChangeText={onChangeText}
       secureTextEntry={secureTextEntry}
       maxLength={maxLength}
+      keyboardType={keyboardType}
     />
   );
 };
