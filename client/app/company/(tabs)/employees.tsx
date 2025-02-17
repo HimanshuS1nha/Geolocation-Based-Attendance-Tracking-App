@@ -2,6 +2,7 @@ import { View, Pressable, ScrollView } from "react-native";
 import React from "react";
 import tw from "twrnc";
 import { AntDesign } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 import EmployeeCard from "@/components/EmployeeCard";
 
@@ -38,6 +39,7 @@ const Employees = () => {
 
       <Pressable
         style={tw`absolute bg-emerald-600 bottom-2 right-2 p-2 rounded-lg z-10 shadow shadow-black`}
+        onPress={() => router.push("/company/add-employee")}
       >
         <AntDesign name="plus" size={30} color="white" />
       </Pressable>
