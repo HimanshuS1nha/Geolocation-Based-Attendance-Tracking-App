@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable } from "react-native";
+import { View, Text, Image, Pressable, Alert } from "react-native";
 import React, { useMemo } from "react";
 import tw from "twrnc";
 import {
@@ -7,6 +7,7 @@ import {
   FontAwesome5,
   AntDesign,
 } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 import { useUser } from "@/hooks/useUser";
 
@@ -48,7 +49,20 @@ const CompanyProfile = () => {
         title: "Logout",
         Icon: MaterialCommunityIcons,
         iconName: "logout",
-        onPress: () => {},
+        onPress: () =>
+          Alert.alert("Warning", "Do you want to logout?", [
+            {
+              text: "No",
+            },
+            {
+              text: "Yes",
+              onPress: () =>
+                deleteUser().then(() => {
+                  router.dismissAll();
+                  router.replace("/onboarding");
+                }),
+            },
+          ]),
         variant: "destructive",
       },
     ],
