@@ -31,7 +31,19 @@ export const createAndSendOtp = async (
       },
     });
   } else if (type === "employee") {
-    //! Implement for employees
+    await prisma.employeeOtp.deleteMany({
+      where: {
+        employeeEmail: email,
+      },
+    });
+
+    await prisma.employeeOtp.create({
+      data: {
+        employeeEmail: email,
+        otp,
+        expires: new Date(Date.now() + 1000 * 60 * 5),
+      },
+    });
   }
 
   await sendEmail(email, otp);
