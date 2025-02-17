@@ -8,12 +8,14 @@ const Input = ({
   value,
   placeholder,
   secureTextEntry,
+  maxLength,
 }: {
   value: string;
   placeholder: string;
   onChangeText: (text: string) => void;
   style?: StyleProp<TextInputProps>;
   secureTextEntry?: boolean;
+  maxLength?: number;
 }) => {
   return (
     <TextInput
@@ -22,6 +24,7 @@ const Input = ({
       placeholder={placeholder}
       onChangeText={onChangeText}
       secureTextEntry={secureTextEntry}
+      maxLength={maxLength}
     />
   );
 };
