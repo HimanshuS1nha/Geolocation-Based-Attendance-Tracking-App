@@ -53,5 +53,18 @@ model Employees {
   updatedAt DateTime @updatedAt
 
   companyEmail String
-  company      Companies @relation(references: [email], fields: [companyEmail], onDelete: Cascade)
+  company      Companies    @relation(references: [email], fields: [companyEmail], onDelete: Cascade)
+  
+  EmployeeOtp  EmployeeOtp?
+}
+
+model EmployeeOtp {
+  id  String @id @default(uuid())
+  otp Int
+
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  employeeEmail String    @unique
+  employee      Employees @relation(references: [email], fields: [employeeEmail], onDelete: Cascade)
 }
