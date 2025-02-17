@@ -73,7 +73,13 @@ const Login = () => {
       } else if (error instanceof AxiosError && error.response?.data.error) {
         Alert.alert("Error", error.response.data.error);
         if (error.response.status === 403) {
-          //! Push to verify page
+          router.push({
+            pathname: "/auth/verify",
+            params: {
+              email,
+              type,
+            },
+          });
         }
       } else {
         Alert.alert("Error", error.message);
