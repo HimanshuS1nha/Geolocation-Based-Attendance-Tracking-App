@@ -29,7 +29,8 @@ verifyOtpRouter.post("/company", async (req, res) => {
       res.status(422).json({ error: "OTP does not exist" });
       return;
     }
-    if (otpEntry.expires > new Date()) {
+    
+    if (otpEntry.expires < new Date()) {
       res.status(409).json({ error: "OTP has expired" });
       return;
     }
@@ -53,7 +54,7 @@ verifyOtpRouter.post("/company", async (req, res) => {
       },
     });
 
-    res.status(200).json({ message: "Email verified successfully" });
+    res.status(200).json({ message: "Verification successful" });
   } catch (error) {
     if (error instanceof ZodError) {
       res.status(422).json({ error: error.errors[0].message });
