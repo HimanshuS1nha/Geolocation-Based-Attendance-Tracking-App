@@ -101,6 +101,7 @@ const AddEmployee = () => {
           base64={fileBase64}
           setFileBase64={setFileBase64}
           setFileName={setFileName}
+          type="add-employee"
         />
 
         <Input

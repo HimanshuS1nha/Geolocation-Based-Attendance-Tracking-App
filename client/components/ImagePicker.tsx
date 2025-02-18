@@ -10,10 +10,12 @@ const ImagePicker = ({
   base64,
   setFileBase64,
   setFileName,
+  type = "edit-profile",
 }: {
   base64: string;
   setFileName: React.Dispatch<React.SetStateAction<string>>;
   setFileBase64: React.Dispatch<React.SetStateAction<string>>;
+  type?: "add-employee" | "edit-profile";
 }) => {
   const user = useUser((state) => state.user);
 
@@ -33,7 +35,7 @@ const ImagePicker = ({
   }, []);
   return (
     <>
-      {user ? (
+      {user && type === "edit-profile" ? (
         <View style={tw`items-center justify-center`}>
           <Image
             source={{
