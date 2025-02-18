@@ -10,10 +10,14 @@ import {
 import { router } from "expo-router";
 
 import { useUser } from "@/hooks/useUser";
+import { useOfficeLocationModal } from "@/hooks/useOfficeLocationModal";
 
 const CompanyProfile = () => {
   const user = useUser((state) => state.user);
   const deleteUser = useUser((state) => state.deleteUser);
+  const setIsOfficeLocationModalVisible = useOfficeLocationModal(
+    (state) => state.setIsVisible
+  );
 
   const options = useMemo(
     () => [
@@ -21,7 +25,7 @@ const CompanyProfile = () => {
         title: "Update Office Location",
         Icon: Entypo,
         iconName: "location-pin",
-        onPress: () => {},
+        onPress: () => setIsOfficeLocationModalVisible(true),
         variant: "default",
       },
       {
