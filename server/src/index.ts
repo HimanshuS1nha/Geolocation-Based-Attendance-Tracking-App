@@ -9,6 +9,7 @@ import { verifyOtpRouter } from "./routes/verify-otp-route";
 import { changePasswordRouter } from "./routes/change-password-route";
 
 import { addEmployeeRouter } from "./routes/add-employee-route";
+import { editEmployeeRouter } from "./routes/edit-employee-route";
 import { editProfileRouter } from "./routes/edit-profile-route";
 
 const app = express();
@@ -26,6 +27,7 @@ app.use("/api/verify-otp", verifyOtpRouter);
 app.use("/api/change-password", changePasswordRouter);
 
 app.use("/api/add-employee", addEmployeeRouter);
+app.use("/api/edit-employee", editEmployeeRouter);
 app.use("/api/edit-profile", editProfileRouter);
 
 io.on("connection", (socket) => {
