@@ -11,6 +11,7 @@ import { changePasswordRouter } from "./routes/change-password-route";
 import { addEmployeeRouter } from "./routes/add-employee-route";
 import { editEmployeeRouter } from "./routes/edit-employee-route";
 import { editProfileRouter } from "./routes/edit-profile-route";
+import { addOfficeLocationRouter } from "./routes/add-office-location-route";
 
 const app = express();
 const server = createServer(app);
@@ -29,6 +30,7 @@ app.use("/api/change-password", changePasswordRouter);
 app.use("/api/add-employee", addEmployeeRouter);
 app.use("/api/edit-employee", editEmployeeRouter);
 app.use("/api/edit-profile", editProfileRouter);
+app.use("/api/add-office-location", addOfficeLocationRouter);
 
 io.on("connection", (socket) => {
   console.log(`${socket.id} Joined`);
