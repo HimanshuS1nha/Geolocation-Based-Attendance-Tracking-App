@@ -1,8 +1,10 @@
-import { View, Text, Image, Pressable } from "react-native";
+import { View, Image, Pressable } from "react-native";
 import React, { useCallback } from "react";
 import tw from "twrnc";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import * as ExpoImagePicker from "expo-image-picker";
+
+import { useUser } from "@/hooks/useUser";
 
 const ImagePicker = ({
   base64,
@@ -13,6 +15,8 @@ const ImagePicker = ({
   setFileName: React.Dispatch<React.SetStateAction<string>>;
   setFileBase64: React.Dispatch<React.SetStateAction<string>>;
 }) => {
+  const user = useUser((state) => state.user);
+
   const pickImage = useCallback(async () => {
     const result = await ExpoImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
@@ -29,7 +33,25 @@ const ImagePicker = ({
   }, []);
   return (
     <>
-      {base64 ? (
+      {user ? (
+        <View style={tw`items-center justify-center`}>
+          <Image
+            source={{
+              uri:
+                base64.length > 0
+                  ? `data:image/png;base64,${base64}`
+                  : user.image,
+            }}
+            style={tw`size-28 rounded-full`}
+          />
+          <Pressable
+            style={tw`absolute bg-emerald-600 bottom-0 right-0 p-2 rounded-full z-10 shadow shadow-black`}
+            onPress={pickImage}
+          >
+            <MaterialIcons name="change-circle" size={26} color="white" />
+          </Pressable>
+        </View>
+      ) : base64 ? (
         <View style={tw`items-center justify-center`}>
           <Image
             source={{

@@ -19,6 +19,13 @@ const CompanyStackLayout = () => {
           headerTitle: "Profile",
         }}
       />
+
+      <Stack.Screen
+        name="edit-profile"
+        options={{
+          headerTitle: "Edit Profile",
+        }}
+      />
     </Stack>
   );
 };
