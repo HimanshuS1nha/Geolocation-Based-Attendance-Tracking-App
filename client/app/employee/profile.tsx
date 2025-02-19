@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable } from "react-native";
+import { View, Text, Image, Pressable, Alert } from "react-native";
 import React, { useMemo } from "react";
 import tw from "twrnc";
 import {
@@ -6,11 +6,13 @@ import {
   MaterialCommunityIcons,
   FontAwesome5,
 } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 import { useUser } from "@/hooks/useUser";
 
 const EmployeeProfile = () => {
   const user = useUser((state) => state.user);
+  const deleteUser = useUser((state) => state.deleteUser);
 
   const options = useMemo(
     () => [
@@ -32,7 +34,20 @@ const EmployeeProfile = () => {
         title: "Logout",
         Icon: MaterialCommunityIcons,
         iconName: "logout",
-        onPress: () => {},
+        onPress: () =>
+          Alert.alert("Warning", "Do you want to logout?", [
+            {
+              text: "No",
+            },
+            {
+              text: "Yes",
+              onPress: () =>
+                deleteUser().then(() => {
+                  router.dismissAll();
+                  router.replace("/onboarding");
+                }),
+            },
+          ]),
         variant: "destructive",
       },
     ],
