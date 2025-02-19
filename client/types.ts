@@ -15,3 +15,10 @@ export type EmployeeType = {
   image: string;
   designation?: string;
 };
+
+export type AttendanceRecordType = {
+  date: string;
+  day: string;
+  isPresent: boolean;
+  timeSpent?: string;
+};
