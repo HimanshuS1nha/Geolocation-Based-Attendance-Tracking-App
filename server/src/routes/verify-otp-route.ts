@@ -29,7 +29,7 @@ verifyOtpRouter.post("/company", async (req, res) => {
       res.status(422).json({ error: "OTP does not exist" });
       return;
     }
-    
+
     if (otpEntry.expires < new Date()) {
       res.status(409).json({ error: "OTP has expired" });
       return;

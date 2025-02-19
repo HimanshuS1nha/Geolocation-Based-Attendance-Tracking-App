@@ -13,6 +13,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum AttendanceMode {
+  Manual
+  Geolocation
+}
+
 model Companies {
   id              String    @id @default(uuid())
   name            String
@@ -28,6 +33,7 @@ model Companies {
 
   CompanyOtp CompanyOtp?
   Employees  Employees[]
+  Attendance Attendance[]
 }
 
 model CompanyOtp {
@@ -53,9 +59,10 @@ model Employees {
   updatedAt DateTime @updatedAt
 
   companyEmail String
-  company      Companies    @relation(references: [email], fields: [companyEmail], onDelete: Cascade)
-  
-  EmployeeOtp  EmployeeOtp?
+  company      Companies @relation(references: [email], fields: [companyEmail], onDelete: Cascade)
+
+  EmployeeOtp EmployeeOtp?
+  Attendance  Attendance[]
 }
 
 model EmployeeOtp {
@@ -67,4 +74,45 @@ model EmployeeOtp {
 
   employeeEmail String    @unique
   employee      Employees @relation(references: [email], fields: [employeeEmail], onDelete: Cascade)
+}
+
+model Attendance {
+  id        String         @id @default(uuid())
+  date      Int
+  month     Int
+  year      Int
+  mode      AttendanceMode
+  latitude  Float
+  longitude Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  employeeEmail String
+  employee      Employees @relation(references: [email], fields: [employeeEmail], onDelete: Cascade)
+  companyEmail  String
+  company       Companies @relation(references: [email], fields: [companyEmail], onDelete: Cascade)
+
+  EmployeeEntry EmployeeEntry[]
+
+  @@unique([employeeEmail, companyEmail, date, month, year])
+  @@index([date, month, year])
+}
+
+model EmployeeEntry {
+  id        String   @id @default(uuid())
+  enteredAt DateTime
+
+  attendanceId   String
+  attendance     Attendance    @relation(references: [id], fields: [attendanceId], onDelete: Cascade)
+  employeeExitId String?
+  EmployeeExit   EmployeeExit?
+}
+
+model EmployeeExit {
+  id       String   @id @default(uuid())
+  exitedAt DateTime
+
+  entryId       String        @unique
+  employeeEntry EmployeeEntry @relation(references: [id], fields: [entryId], onDelete: Cascade)
 }
