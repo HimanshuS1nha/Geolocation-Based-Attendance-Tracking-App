@@ -20,7 +20,7 @@ const EmployeeProfile = () => {
         title: "Edit Profile",
         Icon: FontAwesome5,
         iconName: "user-alt",
-        onPress: () => {},
+        onPress: () => router.push("/employee/edit-profile"),
         variant: "default",
       },
       {
