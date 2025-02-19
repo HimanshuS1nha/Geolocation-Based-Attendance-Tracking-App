@@ -1,5 +1,5 @@
 import React from "react";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import { Pressable, Image } from "react-native";
 import tw from "twrnc";
 
@@ -15,7 +15,7 @@ const EmployeeStackLayout = () => {
           headerTitle: "GeoAttendance",
           headerRight: () => {
             return (
-              <Pressable>
+              <Pressable onPress={() => router.push("/employee/profile")}>
                 <Image
                   source={{
                     uri: user?.image,
@@ -25,6 +25,13 @@ const EmployeeStackLayout = () => {
               </Pressable>
             );
           },
+        }}
+      />
+
+      <Stack.Screen
+        name="profile"
+        options={{
+          headerTitle: "Profile",
         }}
       />
     </Stack>
