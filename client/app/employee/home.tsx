@@ -2,6 +2,7 @@ import { View, Text, ScrollView, Pressable } from "react-native";
 import React from "react";
 import tw from "twrnc";
 import { Entypo } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 import ProfileCard from "@/components/ProfileCard";
 import Button from "@/components/Button";
@@ -40,7 +41,7 @@ const EmployeeHome = () => {
               <Entypo name="chevron-right" size={18} color="#4F46E5" />
             </Pressable>
           </View>
-          
+
           {dummyAttendanceRecords.map((attendanceRecord, i) => {
             return (
               <AttendanceRecordCard
@@ -53,7 +54,12 @@ const EmployeeHome = () => {
       </ScrollView>
 
       <View style={tw`flex-row gap-x-4 justify-center pb-4`}>
-        <Button variant="outline" style={tw`w-[45%]`} textSize="sm">
+        <Button
+          variant="outline"
+          style={tw`w-[45%]`}
+          textSize="sm"
+          onPress={() => router.push("/employee/scan-qr")}
+        >
           Scan QR Code
         </Button>
         <Button style={tw`w-[45%]`} textSize="sm">

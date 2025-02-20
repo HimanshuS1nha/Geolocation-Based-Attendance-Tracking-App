@@ -48,6 +48,11 @@ const EmployeeStackLayout = () => {
           headerTitle: "Change Password",
         }}
       />
+
+      <Stack.Screen
+        name="scan-qr"
+        options={{ headerTitle: "", headerShadowVisible: false }}
+      />
     </Stack>
   );
 };
