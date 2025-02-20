@@ -41,6 +41,13 @@ const EmployeeStackLayout = () => {
           headerTitle: "Edit Profile",
         }}
       />
+
+      <Stack.Screen
+        name="change-password"
+        options={{
+          headerTitle: "Change Password",
+        }}
+      />
     </Stack>
   );
 };
