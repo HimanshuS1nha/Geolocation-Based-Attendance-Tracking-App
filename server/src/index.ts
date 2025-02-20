@@ -18,6 +18,7 @@ import { editEmployeeRouter } from "./routes/edit-employee-route";
 import { deleteEmployeeRouter } from "./routes/delete-employee-route";
 import { editProfileRouter } from "./routes/edit-profile-route";
 import { addOfficeLocationRouter } from "./routes/add-office-location-route";
+import { getDesignationsRouter } from "./routes/get-designations-route";
 
 const app = express();
 const server = createServer(app);
@@ -41,6 +42,7 @@ app.use("/api/edit-employee", editEmployeeRouter);
 app.use("/api/delete-employee", deleteEmployeeRouter);
 app.use("/api/edit-profile", editProfileRouter);
 app.use("/api/add-office-location", addOfficeLocationRouter);
+app.use("/api/get-designations", getDesignationsRouter);
 
 io.on("connection", async (socket) => {
   const { token } = socket.handshake.auth;
