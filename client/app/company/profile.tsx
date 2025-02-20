@@ -46,7 +46,7 @@ const CompanyProfile = () => {
         title: "Change Password",
         Icon: Entypo,
         iconName: "lock",
-        onPress: () => {},
+        onPress: () => router.push("/company/change-password"),
         variant: "default",
       },
       {
