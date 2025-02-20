@@ -22,15 +22,19 @@ const CompanyHome = () => {
   );
 
   const handleStartTakingAttendance = useCallback(() => {
-    if (!user?.hasAddedOfficeLocation) {
-      return setIsOfficeLocationModalVisible(true);
+    try {
+      if (!user?.hasAddedOfficeLocation) {
+        return setIsOfficeLocationModalVisible(true);
+      }
+
+      const token = SecureStore.getItem("token");
+      socket.auth = { token };
+
+      socket.connect();
+      setIsTakingAttendance(true);
+    } catch {
+      Alert.alert("Error", "Some error occured. Please try again later!");
     }
-
-    const token = SecureStore.getItem("token");
-    socket.auth = { token };
-
-    socket.connect();
-    setIsTakingAttendance(true);
   }, [user]);
 
   const handleStopTakingAttendance = useCallback(() => {
