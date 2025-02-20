@@ -15,8 +15,11 @@ import { useUser } from "@/hooks/useUser";
 
 import { editEmployeeProfileValidator } from "@/validators/edit-profile-validator";
 
+import type { UserType } from "@/types";
+
 const EditEmployeeProfile = () => {
   const user = useUser((state) => state.user);
+  const setUser = useUser((state) => state.setUser);
 
   const [name, setName] = useState(user?.name ?? "");
   const [designation, setDesignation] = useState(user?.designation ?? "");
@@ -57,9 +60,11 @@ const EditEmployeeProfile = () => {
         }
       );
 
-      return data as { message: string };
+      return data as { message: string; user: UserType };
     },
     onSuccess: async (data) => {
+      setUser(data.user);
+
       Alert.alert("Success", data.message, [
         {
           text: "Ok",

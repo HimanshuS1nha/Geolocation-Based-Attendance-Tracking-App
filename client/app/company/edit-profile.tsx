@@ -15,8 +15,11 @@ import { useUser } from "@/hooks/useUser";
 
 import { editCompanyProfileValidator } from "@/validators/edit-profile-validator";
 
+import type { UserType } from "@/types";
+
 const EditCompanyProfile = () => {
   const user = useUser((state) => state.user);
+  const setUser = useUser((state) => state.setUser);
 
   const [name, setName] = useState(user?.name ?? "");
   const [fileName, setFileName] = useState("");
@@ -46,9 +49,11 @@ const EditCompanyProfile = () => {
         }
       );
 
-      return data as { message: string };
+      return data as { message: string; user: UserType };
     },
     onSuccess: (data) => {
+      setUser(data.user);
+      
       Alert.alert("Success", data.message, [
         {
           text: "Ok",
