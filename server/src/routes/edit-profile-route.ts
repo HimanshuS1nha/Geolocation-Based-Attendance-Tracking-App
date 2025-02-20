@@ -8,7 +8,10 @@ import { getCompanyByEmail } from "../helpers/get-company-by-email";
 import { saveImage } from "../helpers/save-image";
 import { getEmployeeByEmail } from "../helpers/get-employee-by-email";
 
-import { editCompanyProfileValidator, editEmployeeProfileValidator } from "../validators/edit-profile-validator";
+import {
+  editCompanyProfileValidator,
+  editEmployeeProfileValidator,
+} from "../validators/edit-profile-validator";
 
 const editProfileRouter = Router();
 
@@ -44,6 +47,8 @@ editProfileRouter.post("/company", async (req, res) => {
     const { fileName, name, fileBase64 } =
       await editCompanyProfileValidator.parseAsync(req.body);
 
+    let newCompany;
+
     if (
       fileName &&
       fileName?.trim().length !== 0 &&
@@ -56,7 +61,7 @@ editProfileRouter.post("/company", async (req, res) => {
         "uploads/companies"
       );
 
-      await prisma.companies.update({
+      newCompany = await prisma.companies.update({
         where: {
           id: company.id,
         },
@@ -66,7 +71,7 @@ editProfileRouter.post("/company", async (req, res) => {
         },
       });
     } else {
-      await prisma.companies.update({
+      newCompany = await prisma.companies.update({
         where: {
           id: company.id,
         },
@@ -76,7 +81,19 @@ editProfileRouter.post("/company", async (req, res) => {
       });
     }
 
-    res.status(200).json({ message: "Profile edited successfully" });
+    res.status(200).json({
+      message: "Profile edited successfully",
+      user: {
+        name: newCompany.name,
+        email: newCompany.email,
+        id: newCompany.id,
+        image: newCompany.image,
+        type: "company",
+        hasAddedOfficeLocation: !!(
+          newCompany.officeLatitude && newCompany.officeLongitude
+        ),
+      },
+    });
   } catch (error) {
     if (error instanceof ZodError) {
       res.status(422).json({ error: error.errors[0].message });
@@ -120,6 +137,8 @@ editProfileRouter.post("/employee", async (req, res) => {
     const { fileName, name, fileBase64, designation } =
       await editEmployeeProfileValidator.parseAsync(req.body);
 
+    let newEmployee;
+
     if (
       fileName &&
       fileName?.trim().length !== 0 &&
@@ -132,7 +151,7 @@ editProfileRouter.post("/employee", async (req, res) => {
         "uploads/employees"
       );
 
-      await prisma.employees.update({
+      newEmployee = await prisma.employees.update({
         where: {
           id: employee.id,
         },
@@ -143,7 +162,7 @@ editProfileRouter.post("/employee", async (req, res) => {
         },
       });
     } else {
-      await prisma.employees.update({
+      newEmployee = await prisma.employees.update({
         where: {
           id: employee.id,
         },
@@ -154,7 +173,16 @@ editProfileRouter.post("/employee", async (req, res) => {
       });
     }
 
-    res.status(200).json({ message: "Profile edited successfully" });
+    res.status(200).json({
+      message: "Profile edited successfully",
+      user: {
+        name: newEmployee.name,
+        email: newEmployee.email,
+        id: newEmployee.id,
+        image: newEmployee.image,
+        type: "employee",
+      },
+    });
   } catch (error) {
     if (error instanceof ZodError) {
       res.status(422).json({ error: error.errors[0].message });
