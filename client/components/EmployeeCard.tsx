@@ -8,7 +8,7 @@ import type { EmployeeType } from "@/types";
 const EmployeeCard = ({ employee }: { employee: EmployeeType }) => {
   return (
     <View
-      style={tw`w-[47%] p-3.5 bg-white items-center rounded-lg shadow shadow-black gap-y-4`}
+      style={tw`w-[95%] mb-4 p-3.5 bg-white items-center rounded-lg shadow shadow-black gap-y-4`}
     >
       <Image
         source={{ uri: employee.image }}

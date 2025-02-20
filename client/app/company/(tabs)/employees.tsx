@@ -1,8 +1,9 @@
-import { View, Pressable, ScrollView } from "react-native";
+import { View, Pressable } from "react-native";
 import React from "react";
 import tw from "twrnc";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { FlashList } from "@shopify/flash-list";
 
 import EmployeeCard from "@/components/EmployeeCard";
 
@@ -29,13 +30,17 @@ const Employees = () => {
   ];
   return (
     <View style={tw`flex-1`}>
-      <ScrollView
-        contentContainerStyle={tw`px-4 pt-4 flex-row flex-wrap gap-4`}
-      >
-        {dummyEmployees.map((employee) => {
-          return <EmployeeCard employee={employee} key={employee.id} />;
-        })}
-      </ScrollView>
+      <FlashList
+        data={dummyEmployees}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => {
+          return <EmployeeCard employee={item} />;
+        }}
+        contentContainerStyle={tw`px-4 pt-4`}
+        estimatedItemSize={50}
+        numColumns={2}
+        showsVerticalScrollIndicator={false}
+      />
 
       <Pressable
         style={tw`absolute bg-emerald-600 bottom-2 right-2 p-2 rounded-lg z-10 shadow shadow-black`}
