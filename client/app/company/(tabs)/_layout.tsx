@@ -45,7 +45,7 @@ const CompanyTabsLayout = () => {
           title: "Employees",
           headerRight: (props) => {
             return (
-              <View style={tw`flex-row gap-x-4 items-center`}>
+              <View style={tw`flex-row gap-x-4 items-center`} {...props}>
                 <Pressable>
                   <Ionicons name="options-outline" size={26} color="black" />
                 </Pressable>

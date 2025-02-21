@@ -1,21 +1,39 @@
-import { View, Pressable, Alert, ActivityIndicator, Text } from "react-native";
-import React, { useEffect } from "react";
+import {
+  View,
+  Pressable,
+  Alert,
+  ActivityIndicator,
+  Text,
+  Image,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import tw from "twrnc";
 import { AntDesign } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import * as SecureStore from "expo-secure-store";
+import { Ionicons } from "@expo/vector-icons";
 
 import EmployeeCard from "@/components/EmployeeCard";
+import EmployeesFiltersModal from "@/components/EmployeesFiltersModal";
 
+import { useUser } from "@/hooks/useUser";
 import { useEmployees } from "@/hooks/useEmployees";
 
 import type { EmployeeType } from "@/types";
 
 const Employees = () => {
+  const user = useUser((state) => state.user);
   const { employees, setEmployees } = useEmployees();
+
+  const [isVisible, setIsVisible] = useState(false);
+  const [designation, setDesignation] = useState("");
+
+  const filteredEmployees = employees.filter((employee) =>
+    designation.length > 0 ? employee.designation === designation : true
+  );
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [`get-employee-${employees.length}`],
@@ -27,7 +45,7 @@ const Employees = () => {
 
       const { data } = await axios.post(
         `${process.env.EXPO_PUBLIC_API_URL}/api/get-employees`,
-        { skip: employees.length },
+        { skip: employees.length, designation },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -87,11 +105,40 @@ const Employees = () => {
   }, [data]);
   return (
     <View style={tw`flex-1`}>
+      <Stack.Screen
+        options={{
+          headerRight: (props) => {
+            return (
+              <View style={tw`flex-row gap-x-4 items-center`} {...props}>
+                <Pressable onPress={() => setIsVisible(true)}>
+                  <Ionicons name="options-outline" size={26} color="black" />
+                </Pressable>
+                <Pressable onPress={() => router.push("/company/profile")}>
+                  <Image
+                    source={{
+                      uri: user?.image,
+                    }}
+                    style={tw`size-9 rounded-full mr-2`}
+                  />
+                </Pressable>
+              </View>
+            );
+          },
+        }}
+      />
+
+      <EmployeesFiltersModal
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        designation={designation}
+        setDesignation={setDesignation}
+      />
+
       {isLoading ? (
-        <ActivityIndicator size={45} color={"#4F46E5"} />
-      ) : employees.length > 0 ? (
+        <ActivityIndicator size={40} style={tw`mt-4`} color={"#4F46E5"} />
+      ) : filteredEmployees.length > 0 ? (
         <FlashList
-          data={employees}
+          data={filteredEmployees}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => {
             return (
@@ -108,7 +155,9 @@ const Employees = () => {
           onEndReached={refetch}
         />
       ) : (
-        <Text style={tw`text-rose-600 font-semibold text-base`}>
+        <Text
+          style={tw`text-rose-600 text-center mt-4 font-semibold text-base`}
+        >
           No data to show
         </Text>
       )}
