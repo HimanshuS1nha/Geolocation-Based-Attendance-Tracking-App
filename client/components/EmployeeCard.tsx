@@ -23,7 +23,7 @@ const EmployeeCard = ({
       />
 
       <View style={tw`gap-y-2 items-center`}>
-        <Text style={tw`text-base font-semibold text-center`}>
+        <Text style={tw`font-semibold text-center`}>
           {employee.name}
         </Text>
         <Text style={tw`text-gray-700`}>{employee.designation}</Text>
@@ -48,7 +48,7 @@ const EmployeeCard = ({
         </Pressable>
         <Pressable
           onPress={() =>
-            Alert.alert("Warning", `Do you want to delete ${employee.name}`, [
+            Alert.alert("Warning", `Do you want to delete ${employee.name}?`, [
               {
                 text: "No",
               },
