@@ -17,7 +17,7 @@ import type { EmployeeType } from "@/types";
 const Employees = () => {
   const { employees, setEmployees } = useEmployees();
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: [`get-employee-${employees.length}`],
     queryFn: async () => {
       const token = SecureStore.getItem("token");
@@ -105,6 +105,7 @@ const Employees = () => {
           estimatedItemSize={50}
           numColumns={2}
           showsVerticalScrollIndicator={false}
+          onEndReached={refetch}
         />
       ) : (
         <Text style={tw`text-rose-600 font-semibold text-base`}>
