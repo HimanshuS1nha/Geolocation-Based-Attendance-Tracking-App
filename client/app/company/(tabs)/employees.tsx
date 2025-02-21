@@ -36,7 +36,7 @@ const Employees = () => {
   );
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: [`get-employee-${employees.length}`],
+    queryKey: [`get-employee`],
     queryFn: async () => {
       const token = SecureStore.getItem("token");
       if (!token) {
@@ -83,7 +83,7 @@ const Employees = () => {
 
       return { ...data, employeeId } as { message: string; employeeId: string };
     },
-    onSuccess: async (data) => {
+    onSuccess:  (data) => {
       setEmployees(
         employees.filter((employee) => employee.id !== data.employeeId)
       );

@@ -68,7 +68,7 @@ const EditEmployee = () => {
 
       return data as { message: string; employee: EmployeeType };
     },
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       setEmployees(
         employees.map((employee) =>
           employee.id === data.employee.id ? data.employee : employee

@@ -1,7 +1,7 @@
 import { View, ScrollView, Alert } from "react-native";
 import React, { useState, useCallback } from "react";
 import tw from "twrnc";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as SecureStore from "expo-secure-store";
 import axios, { AxiosError } from "axios";
 import { ZodError } from "zod";
@@ -14,6 +14,8 @@ import Button from "@/components/Button";
 import { addEmployeeValidator } from "@/validators/add-employee-validator";
 
 const AddEmployee = () => {
+  const queryClient = useQueryClient();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -76,7 +78,7 @@ const AddEmployee = () => {
       return data as { message: string };
     },
     onSuccess: async (data) => {
-      //! Invalidate get employees query
+      await queryClient.invalidateQueries({ queryKey: ["get-employees"] });
       Alert.alert("Success", data.message, [
         {
           text: "Ok",
