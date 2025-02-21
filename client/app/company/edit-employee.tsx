@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Alert } from "react-native";
+import { View, ScrollView, Alert } from "react-native";
 import React, { useState, useCallback } from "react";
 import tw from "twrnc";
 import { useLocalSearchParams } from "expo-router";
