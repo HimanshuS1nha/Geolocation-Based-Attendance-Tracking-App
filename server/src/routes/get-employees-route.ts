@@ -39,22 +39,44 @@ getEmployeesRouter.post("/", async (req, res) => {
       return;
     }
 
-    const { skip } = await getEmployeesValidator.parseAsync(req.body);
+    const { skip, designation } = await getEmployeesValidator.parseAsync(
+      req.body
+    );
 
-    const employees = await prisma.employees.findMany({
-      where: {
-        companyEmail: company.email,
-      },
-      skip,
-      take: 20,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        image: true,
-        designation: true,
-      },
-    });
+    let employees;
+
+    if (designation.length > 0) {
+      employees = await prisma.employees.findMany({
+        where: {
+          companyEmail: company.email,
+          designation,
+        },
+        skip,
+        take: 20,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+          designation: true,
+        },
+      });
+    } else {
+      employees = await prisma.employees.findMany({
+        where: {
+          companyEmail: company.email,
+        },
+        skip,
+        take: 20,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+          designation: true,
+        },
+      });
+    }
 
     res.status(200).json({ employees });
   } catch (error) {
