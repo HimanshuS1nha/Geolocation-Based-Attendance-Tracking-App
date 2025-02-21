@@ -36,6 +36,13 @@ const CompanyStackLayout = () => {
             headerTitle: "Change Password",
           }}
         />
+
+        <Stack.Screen
+          name="edit-employee"
+          options={{
+            headerTitle: "Edit Employee",
+          }}
+        />
       </Stack>
 
       <OfficeLocationModal />

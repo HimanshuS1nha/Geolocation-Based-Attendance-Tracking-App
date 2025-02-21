@@ -11,11 +11,13 @@ const ImagePicker = ({
   setFileBase64,
   setFileName,
   type = "edit-profile",
+  image,
 }: {
   base64: string;
   setFileName: React.Dispatch<React.SetStateAction<string>>;
   setFileBase64: React.Dispatch<React.SetStateAction<string>>;
-  type?: "add-employee" | "edit-profile";
+  type?: "add-employee" | "edit-profile" | "edit-employee";
+  image?: string;
 }) => {
   const user = useUser((state) => state.user);
 
@@ -35,7 +37,23 @@ const ImagePicker = ({
   }, []);
   return (
     <>
-      {user && type === "edit-profile" ? (
+      {type === "edit-employee" ? (
+        <View style={tw`items-center justify-center`}>
+          <Image
+            source={{
+              uri:
+                base64.length > 0 ? `data:image/png;base64,${base64}` : image,
+            }}
+            style={tw`size-28 rounded-full`}
+          />
+          <Pressable
+            style={tw`absolute bg-emerald-600 bottom-0 right-0 p-2 rounded-full z-10 shadow shadow-black`}
+            onPress={pickImage}
+          >
+            <MaterialIcons name="change-circle" size={26} color="white" />
+          </Pressable>
+        </View>
+      ) : user && type === "edit-profile" ? (
         <View style={tw`items-center justify-center`}>
           <Image
             source={{

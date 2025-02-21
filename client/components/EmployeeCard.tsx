@@ -2,6 +2,7 @@ import { View, Text, Image, Pressable, Alert } from "react-native";
 import React from "react";
 import tw from "twrnc";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 import type { EmployeeType } from "@/types";
 
@@ -29,7 +30,20 @@ const EmployeeCard = ({
       </View>
 
       <View style={tw`flex-row gap-x-4 items-center`}>
-        <Pressable>
+        <Pressable
+          onPress={() =>
+            router.push({
+              pathname: "/company/edit-employee",
+              params: {
+                id: employee.id,
+                name: employee.name,
+                designation: employee.designation,
+                email: employee.email,
+                image: employee.image,
+              },
+            })
+          }
+        >
           <FontAwesome5 name="pencil-alt" size={20} color="blue" />
         </Pressable>
         <Pressable
