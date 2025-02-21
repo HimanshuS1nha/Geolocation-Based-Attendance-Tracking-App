@@ -65,6 +65,8 @@ editEmployeeRouter.post("/:employeeId", async (req, res) => {
       return;
     }
 
+    let updatedEmployee;
+
     if (
       fileName &&
       fileName.trim().length !== 0 &&
@@ -77,7 +79,7 @@ editEmployeeRouter.post("/:employeeId", async (req, res) => {
         "uploads/employees"
       );
 
-      await prisma.employees.update({
+      updatedEmployee = await prisma.employees.update({
         where: {
           id: employee.id,
         },
@@ -87,9 +89,16 @@ editEmployeeRouter.post("/:employeeId", async (req, res) => {
           email,
           image: `${process.env.URL}/uploads/employees/${newFilename}`,
         },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+          designation: true,
+        },
       });
     } else {
-      await prisma.employees.update({
+      updatedEmployee = await prisma.employees.update({
         where: {
           id: employee.id,
         },
@@ -98,10 +107,20 @@ editEmployeeRouter.post("/:employeeId", async (req, res) => {
           designation,
           email,
         },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+          designation: true,
+        },
       });
     }
 
-    res.status(200).json({ message: "Employee edited successfully" });
+    res.status(200).json({
+      message: "Employee edited successfully",
+      employee: updatedEmployee,
+    });
   } catch (error) {
     if (error instanceof ZodError) {
       res.status(422).json({ error: error.errors[0].message });

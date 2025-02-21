@@ -12,6 +12,8 @@ import ImagePicker from "@/components/ImagePicker";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 
+import { useEmployees } from "@/hooks/useEmployees";
+
 import { editEmployeeValidator } from "@/validators/edit-employee-validator";
 
 import type { EmployeeType } from "@/types";
@@ -19,6 +21,7 @@ import type { EmployeeType } from "@/types";
 const EditEmployee = () => {
   const { email, id, image, name, designation } =
     useLocalSearchParams() as EmployeeType;
+  const { employees, setEmployees } = useEmployees();
 
   const [newName, setNewName] = useState(name);
   const [newEmail, setNewEmail] = useState(email);
@@ -63,10 +66,15 @@ const EditEmployee = () => {
         }
       );
 
-      return data as { message: string };
+      return data as { message: string; employee: EmployeeType };
     },
     onSuccess: async (data) => {
-      //! Invalidate get employees call
+      setEmployees(
+        employees.map((employee) =>
+          employee.id === data.employee.id ? data.employee : employee
+        )
+      );
+
       Alert.alert("Success", data.message, [
         {
           text: "Ok",
