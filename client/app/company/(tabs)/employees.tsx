@@ -110,7 +110,18 @@ const Employees = () => {
           headerRight: (props) => {
             return (
               <View style={tw`flex-row gap-x-4 items-center`} {...props}>
-                <Pressable onPress={() => setIsVisible(true)}>
+                <Pressable
+                  onPress={() => {
+                    if (employees.length > 0) {
+                      setIsVisible(true);
+                    } else {
+                      Alert.alert(
+                        "Error",
+                        "Please add atleast one employee first"
+                      );
+                    }
+                  }}
+                >
                   <Ionicons name="options-outline" size={26} color="black" />
                 </Pressable>
                 <Pressable onPress={() => router.push("/company/profile")}>
