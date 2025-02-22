@@ -99,7 +99,7 @@ forgotPasswordRouter.post("/verify-otp/company", async (req, res) => {
 
     const token = jwt.sign(
       { email: company.email, type: "company" },
-      process.env.JWT_SECRET!
+      process.env.JWT_PASSWORD_RESET_SECRET!
     );
 
     res.status(200).json({ message: "OTP verified successfully", token });
@@ -152,7 +152,7 @@ forgotPasswordRouter.post("/verify-otp/company", async (req, res) => {
 
     const token = jwt.sign(
       { email: employee.email, type: "employee" },
-      process.env.JWT_SECRET!
+      process.env.JWT_PASSWORD_RESET_SECRET!
     );
 
     res.status(200).json({ message: "OTP verified successfully", token });
