@@ -42,6 +42,9 @@ const CreateNewPassword = () => {
         newPassword,
         confirmPassword,
       });
+      if (parsedData.confirmPassword !== parsedData.newPassword) {
+        throw new Error("Passwords do not match");
+      }
 
       const { data } = await axios.post(
         `${process.env.EXPO_PUBLIC_API_URL}/api/create-new-password/${type}`,

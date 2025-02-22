@@ -1,4 +1,11 @@
-import { View, Text, ScrollView, Pressable, Alert } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState, useCallback, useEffect } from "react";
 import tw from "twrnc";
 import { Entypo } from "@expo/vector-icons";
@@ -6,6 +13,8 @@ import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
+import { useQuery } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
 
 import ProfileCard from "@/components/ProfileCard";
 import Button from "@/components/Button";
@@ -52,23 +61,36 @@ TaskManager.defineTask(
 const EmployeeHome = () => {
   const [isTrackingAttendance, setIsTrackingAttendance] = useState(false);
 
-  const dummyAttendanceRecords: AttendanceRecordType[] = [
-    {
-      date: "01-01-01",
-      day: "Friday",
-      isPresent: true,
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["get-attendance-history-for-homepage"],
+    queryFn: async () => {
+      const token = SecureStore.getItem("token");
+      if (!token) {
+        throw new Error("Please login first");
+      }
+
+      const { data } = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/api/get-designations`,
+        {
+          take: 3,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return data as { attendanceRecords: AttendanceRecordType[] };
     },
-    {
-      date: "02-02-01",
-      day: "Saturday",
-      isPresent: true,
-    },
-    {
-      date: "03-03-01",
-      day: "Saturday",
-      isPresent: false,
-    },
-  ];
+  });
+  if (error) {
+    if (error instanceof AxiosError && error.response?.data.error) {
+      Alert.alert("Error", error.response.data.error);
+    } else {
+      Alert.alert("Error", error.message);
+    }
+  }
 
   const handleStartAttendanceTracking = useCallback(async () => {
     try {
@@ -152,14 +174,24 @@ const EmployeeHome = () => {
             </Pressable>
           </View>
 
-          {dummyAttendanceRecords.map((attendanceRecord, i) => {
-            return (
-              <AttendanceRecordCard
-                attendanceRecord={attendanceRecord}
-                key={i}
-              />
-            );
-          })}
+          {isLoading ? (
+            <ActivityIndicator size={30} color={""} />
+          ) : data && data.attendanceRecords.length > 0 ? (
+            data?.attendanceRecords.map((attendanceRecord, i) => {
+              return (
+                <AttendanceRecordCard
+                  attendanceRecord={attendanceRecord}
+                  key={i}
+                />
+              );
+            })
+          ) : (
+            <Text
+              style={tw`text-rose-600 text-base text-center font-semibold mt-4`}
+            >
+              No data to show
+            </Text>
+          )}
         </View>
       </ScrollView>
 
