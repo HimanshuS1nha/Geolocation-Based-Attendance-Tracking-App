@@ -1,40 +1,79 @@
-import { View, Text, ScrollView } from "react-native";
-import React from "react";
+import { View, Text, ScrollView, Alert, ActivityIndicator } from "react-native";
+import React, { useEffect, useState } from "react";
 import tw from "twrnc";
+import * as SecureStore from "expo-secure-store";
+import { useQuery } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
 
 import AttendanceRecordCard from "@/components/AttendanceRecordCard";
 
 import type { AttendanceRecordType } from "@/types";
 
-const AttendanceHistory = () => {
-  const dummyAttendanceRecords: AttendanceRecordType[] = [
-    {
-      date: "01-01-01",
-      day: "Friday",
-      isPresent: true,
+const EmployeeAttendanceHistory = () => {
+  const [attendanceRecords, setAttendanceRecords] = useState<
+    AttendanceRecordType[]
+  >([]);
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["get-attendance-history-for-homepage"],
+    queryFn: async () => {
+      const token = SecureStore.getItem("token");
+      if (!token) {
+        throw new Error("Please login first");
+      }
+
+      const { data } = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/api/get-attendance-history/employee`,
+        {
+          skip: attendanceRecords.length,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return data as { attendanceRecords: AttendanceRecordType[] };
     },
-    {
-      date: "02-02-01",
-      day: "Saturday",
-      isPresent: true,
-    },
-    {
-      date: "03-03-01",
-      day: "Saturday",
-      isPresent: false,
-    },
-  ];
+  });
+  if (error) {
+    if (error instanceof AxiosError && error.response?.data.error) {
+      Alert.alert("Error", error.response.data.error);
+    } else {
+      Alert.alert("Error", error.message);
+    }
+  }
+
+  useEffect(() => {
+    if (data) {
+      setAttendanceRecords((prev) => [...prev, ...data.attendanceRecords]);
+    }
+  }, [data]);
   return (
     <View style={tw`flex-1`}>
       <ScrollView contentContainerStyle={tw`py-4 px-4 gap-y-4`}>
-        {dummyAttendanceRecords.map((attendanceRecord, i) => {
-          return (
-            <AttendanceRecordCard attendanceRecord={attendanceRecord} key={i} />
-          );
-        })}
+        {isLoading ? (
+          <ActivityIndicator size={30} color={"#4F46E5"} />
+        ) : attendanceRecords.length > 0 ? (
+          attendanceRecords.map((attendanceRecord, i) => {
+            return (
+              <AttendanceRecordCard
+                attendanceRecord={attendanceRecord}
+                key={i}
+              />
+            );
+          })
+        ) : (
+          <Text
+            style={tw`text-rose-600 text-base text-center font-semibold mt-4`}
+          >
+            No data to show
+          </Text>
+        )}
       </ScrollView>
     </View>
   );
 };
 
-export default AttendanceHistory;
+export default EmployeeAttendanceHistory;

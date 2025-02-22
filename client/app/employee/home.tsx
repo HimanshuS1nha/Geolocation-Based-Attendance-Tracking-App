@@ -70,7 +70,7 @@ const EmployeeHome = () => {
       }
 
       const { data } = await axios.post(
-        `${process.env.EXPO_PUBLIC_API_URL}/api/get-designations`,
+        `${process.env.EXPO_PUBLIC_API_URL}/api/get-attendance-history/employee`,
         {
           take: 3,
         },
@@ -175,7 +175,7 @@ const EmployeeHome = () => {
           </View>
 
           {isLoading ? (
-            <ActivityIndicator size={30} color={""} />
+            <ActivityIndicator size={30} color={"#4F46E5"} />
           ) : data && data.attendanceRecords.length > 0 ? (
             data?.attendanceRecords.map((attendanceRecord, i) => {
               return (

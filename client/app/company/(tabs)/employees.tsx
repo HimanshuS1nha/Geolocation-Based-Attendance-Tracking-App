@@ -83,7 +83,7 @@ const Employees = () => {
 
       return { ...data, employeeId } as { message: string; employeeId: string };
     },
-    onSuccess:  (data) => {
+    onSuccess: (data) => {
       setEmployees(
         employees.filter((employee) => employee.id !== data.employeeId)
       );
@@ -100,7 +100,7 @@ const Employees = () => {
 
   useEffect(() => {
     if (data) {
-      setEmployees(data.employees);
+      setEmployees([...employees, ...data.employees]);
     }
   }, [data]);
   return (
