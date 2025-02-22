@@ -21,7 +21,7 @@ verifyOtpRouter.post("/company", async (req, res) => {
 
     const otpEntry = await prisma.companyOtp.findUnique({
       where: {
-        companyEmail: email,
+        companyEmail: company.email,
         otp: parseInt(otp),
       },
     });
