@@ -78,7 +78,11 @@ const Verify = () => {
                 "password-change-token",
                 data.token as string
               );
-              //! Replace to create new password screen
+
+              router.replace({
+                pathname: "/auth/create-new-password",
+                params: { type },
+              });
             }
           },
         },
