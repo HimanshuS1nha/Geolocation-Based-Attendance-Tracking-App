@@ -78,6 +78,7 @@ const Login = () => {
             params: {
               email,
               type,
+              redirectTo: "login",
             },
           });
         }

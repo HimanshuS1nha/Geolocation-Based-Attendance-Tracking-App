@@ -24,7 +24,7 @@ const ForgotPassword = () => {
       const parsedData = await emailValidator.parseAsync({ email });
 
       const { data } = await axios.post(
-        `${process.env.EXPO_PUBLIC_API_URL}/api/forgot-password`,
+        `${process.env.EXPO_PUBLIC_API_URL}/api/forgot-password/${type}`,
         { ...parsedData }
       );
 
@@ -34,7 +34,11 @@ const ForgotPassword = () => {
       Alert.alert("Success", data.message, [
         {
           text: "Ok",
-          onPress: () => {},
+          onPress: () =>
+            router.replace({
+              pathname: "/auth/verify",
+              params: { type, redirectTo: "create-new-password" },
+            }),
         },
       ]);
     },

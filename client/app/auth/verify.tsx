@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { ZodError } from "zod";
 import { router } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
@@ -14,9 +15,10 @@ import { emailValidator } from "@/validators/email-validator";
 import { verifyOtpValidator } from "@/validators/verify-otp-validator";
 
 const Verify = () => {
-  const { email, type } = useLocalSearchParams() as {
+  const { email, type, redirectTo } = useLocalSearchParams() as {
     email: string;
     type: "company" | "employee";
+    redirectTo: "login" | "create-new-password";
   };
 
   const [otp, setOtp] = useState("");
@@ -55,19 +57,29 @@ const Verify = () => {
       const parsedData = await verifyOtpValidator.parseAsync({ email, otp });
 
       const { data } = await axios.post(
-        `${process.env.EXPO_PUBLIC_API_URL}/api/verify-otp/${type}`,
+        redirectTo === "login"
+          ? `${process.env.EXPO_PUBLIC_API_URL}/api/verify-otp/company`
+          : `${process.env.EXPO_PUBLIC_API_URL}/api/forgot-password/verify-otp/${type}`,
         { ...parsedData }
       );
 
-      return data as { message: string };
+      return data as { message: string; token?: string };
     },
     onSuccess: (data) => {
       Alert.alert("Success", data.message, [
         {
           text: "Ok",
           onPress: () => {
-            router.dismissAll();
-            router.push({ pathname: "/auth/login", params: { type } });
+            if (redirectTo) {
+              router.dismissAll();
+              router.push({ pathname: "/auth/login", params: { type } });
+            } else {
+              SecureStore.setItem(
+                "password-change-token",
+                data.token as string
+              );
+              //! Replace to create new password screen
+            }
           },
         },
       ]);

@@ -71,6 +71,7 @@ const Signup = () => {
               params: {
                 email,
                 type: "company",
+                redirectTo: "login",
               },
             }),
         },
