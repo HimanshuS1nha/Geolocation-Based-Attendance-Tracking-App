@@ -105,7 +105,16 @@ const Login = () => {
           secureTextEntry
         />
         <View style={tw`items-end`}>
-          <Text style={tw`text-indigo-600 font-bold`}>Forgot Password?</Text>
+          <Pressable
+            onPress={() =>
+              router.push({
+                pathname: "/auth/forgot-password",
+                params: { type },
+              })
+            }
+          >
+            <Text style={tw`text-indigo-600 font-bold`}>Forgot Password?</Text>
+          </Pressable>
         </View>
       </View>
 
