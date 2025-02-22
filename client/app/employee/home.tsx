@@ -162,8 +162,8 @@ const EmployeeHome = () => {
       <ScrollView contentContainerStyle={tw`py-4 px-4 gap-y-7`}>
         <ProfileCard />
 
-        <View style={tw`gap-y-4`}>
-          <View style={tw`flex-row justify-between items-center`}>
+        <View>
+          <View style={tw`flex-row justify-between items-center mb-4`}>
             <Text style={tw`font-medium text-base`}>Attendance History</Text>
             <Pressable
               style={tw`flex-row gap-x-1`}

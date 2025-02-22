@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useMemo } from "react";
 import tw from "twrnc";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 
@@ -10,13 +10,27 @@ const AttendanceRecordCard = ({
 }: {
   attendanceRecord: AttendanceRecordType;
 }) => {
+  const days = useMemo(
+    () => [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ],
+    []
+  );
   return (
     <View
-      style={tw`bg-white p-3 rounded-lg shadow shadow-black flex-row justify-between items-center`}
+      style={tw`bg-white p-3 rounded-lg shadow shadow-black flex-row justify-between items-center mb-4`}
     >
       <View>
         <Text style={tw`text-base font-semibold`}>{attendanceRecord.date}</Text>
-        <Text style={tw`text-gray-700 text-xs`}>{attendanceRecord.day}</Text>
+        <Text style={tw`text-gray-700 text-xs`}>
+          {days[attendanceRecord.day]}
+        </Text>
       </View>
 
       <View style={tw`items-end`}>

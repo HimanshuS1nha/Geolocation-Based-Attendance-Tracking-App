@@ -23,9 +23,7 @@ const EmployeeCard = ({
       />
 
       <View style={tw`gap-y-2 items-center`}>
-        <Text style={tw`font-semibold text-center`}>
-          {employee.name}
-        </Text>
+        <Text style={tw`font-semibold text-center`}>{employee.name}</Text>
         <Text style={tw`text-gray-700`}>{employee.designation}</Text>
       </View>
 

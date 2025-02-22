@@ -1,9 +1,10 @@
-import { View, Text, ScrollView, Alert, ActivityIndicator } from "react-native";
+import { View, Text, Alert, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import tw from "twrnc";
 import * as SecureStore from "expo-secure-store";
 import { useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
+import { FlashList } from "@shopify/flash-list";
 
 import AttendanceRecordCard from "@/components/AttendanceRecordCard";
 
@@ -14,8 +15,8 @@ const EmployeeAttendanceHistory = () => {
     AttendanceRecordType[]
   >([]);
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["get-attendance-history-for-homepage"],
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["get-attendance-history"],
     queryFn: async () => {
       const token = SecureStore.getItem("token");
       if (!token) {
@@ -52,26 +53,26 @@ const EmployeeAttendanceHistory = () => {
   }, [data]);
   return (
     <View style={tw`flex-1`}>
-      <ScrollView contentContainerStyle={tw`py-4 px-4 gap-y-4`}>
-        {isLoading ? (
-          <ActivityIndicator size={30} color={"#4F46E5"} />
-        ) : attendanceRecords.length > 0 ? (
-          attendanceRecords.map((attendanceRecord, i) => {
-            return (
-              <AttendanceRecordCard
-                attendanceRecord={attendanceRecord}
-                key={i}
-              />
-            );
-          })
-        ) : (
-          <Text
-            style={tw`text-rose-600 text-base text-center font-semibold mt-4`}
-          >
-            No data to show
-          </Text>
-        )}
-      </ScrollView>
+      {isLoading ? (
+        <ActivityIndicator size={30} color={"#4F46E5"} />
+      ) : attendanceRecords.length > 0 ? (
+        <FlashList
+          data={attendanceRecords}
+          keyExtractor={(item) => item.date}
+          renderItem={({ item }) => {
+            return <AttendanceRecordCard attendanceRecord={item} />;
+          }}
+          contentContainerStyle={tw`p-4`}
+          estimatedItemSize={50}
+          onEndReached={refetch}
+        />
+      ) : (
+        <Text
+          style={tw`text-rose-600 text-base text-center font-semibold mt-4`}
+        >
+          No data to show
+        </Text>
+      )}
     </View>
   );
 };

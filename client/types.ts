@@ -18,7 +18,7 @@ export type EmployeeType = {
 
 export type AttendanceRecordType = {
   date: string;
-  day: string;
+  day: number;
   isPresent: boolean;
   timeSpent?: string;
 };
