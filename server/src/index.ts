@@ -12,6 +12,7 @@ import { loginRouter } from "./routes/login-route";
 import { resendOtpRouter } from "./routes/resend-otp-route";
 import { verifyOtpRouter } from "./routes/verify-otp-route";
 import { changePasswordRouter } from "./routes/change-password-route";
+import { forgotPasswordRouter } from "./routes/forgot-password-route";
 
 import { addEmployeeRouter } from "./routes/add-employee-route";
 import { editEmployeeRouter } from "./routes/edit-employee-route";
@@ -37,6 +38,7 @@ app.use("/api/login", loginRouter);
 app.use("/api/resend-otp", resendOtpRouter);
 app.use("/api/verify-otp", verifyOtpRouter);
 app.use("/api/change-password", changePasswordRouter);
+app.use("/api/forgot-password", forgotPasswordRouter);
 
 app.use("/api/add-employee", addEmployeeRouter);
 app.use("/api/edit-employee", editEmployeeRouter);
