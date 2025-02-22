@@ -53,6 +53,13 @@ const EmployeeStackLayout = () => {
         name="scan-qr"
         options={{ headerTitle: "", headerShadowVisible: false }}
       />
+
+      <Stack.Screen
+        name="attendance-history"
+        options={{
+          headerTitle: "Attendance History",
+        }}
+      />
     </Stack>
   );
 };

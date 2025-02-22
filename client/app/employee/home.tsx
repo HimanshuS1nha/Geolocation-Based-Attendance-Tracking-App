@@ -143,7 +143,10 @@ const EmployeeHome = () => {
         <View style={tw`gap-y-4`}>
           <View style={tw`flex-row justify-between items-center`}>
             <Text style={tw`font-medium text-base`}>Attendance History</Text>
-            <Pressable style={tw`flex-row gap-x-1`}>
+            <Pressable
+              style={tw`flex-row gap-x-1`}
+              onPress={() => router.push("/employee/attendance-history")}
+            >
               <Text style={tw`text-indigo-600 font-bold`}>View All</Text>
               <Entypo name="chevron-right" size={18} color="#4F46E5" />
             </Pressable>
