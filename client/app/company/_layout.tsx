@@ -43,6 +43,13 @@ const CompanyStackLayout = () => {
             headerTitle: "Edit Employee",
           }}
         />
+
+        <Stack.Screen
+          name="qr-code"
+          options={{
+            headerTitle: "QR Code",
+          }}
+        />
       </Stack>
 
       <OfficeLocationModal />

@@ -32,7 +32,7 @@ const CompanyProfile = () => {
         title: "Get QR Code",
         Icon: AntDesign,
         iconName: "qrcode",
-        onPress: () => {},
+        onPress: () => router.push("/company/qr-code"),
         variant: "default",
       },
       {
