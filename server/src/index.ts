@@ -23,6 +23,7 @@ import { addOfficeLocationRouter } from "./routes/add-office-location-route";
 import { getDesignationsRouter } from "./routes/get-designations-route";
 import { getEmployeesRouter } from "./routes/get-employees-route";
 import { getAttendanceHistoryRouter } from "./routes/get-attendance-history-route";
+import { getQrCodeRouter } from "./routes/get-qr-code-route";
 
 const app = express();
 const server = createServer(app);
@@ -51,6 +52,7 @@ app.use("/api/add-office-location", addOfficeLocationRouter);
 app.use("/api/get-designations", getDesignationsRouter);
 app.use("/api/get-employees", getEmployeesRouter);
 app.use("/api/get-attendance-history", getAttendanceHistoryRouter);
+app.use("/api/get-qr-code", getQrCodeRouter);
 
 io.on("connection", async (socket) => {
   const { token } = socket.handshake.auth;
