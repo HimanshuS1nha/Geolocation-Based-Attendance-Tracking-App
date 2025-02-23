@@ -7,8 +7,15 @@ import {
   useCameraPermissions,
 } from "expo-camera";
 import { useIsFocused } from "@react-navigation/native";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { ZodError } from "zod";
+import * as Location from "expo-location";
+import * as SecureStore from "expo-secure-store";
 
 import Button from "@/components/Button";
+
+import { markAttendanceValidator } from "@/validators/mark-attendance-validator";
 
 const ScanQR = () => {
   const isFocused = useIsFocused();
@@ -18,8 +25,53 @@ const ScanQR = () => {
 
   const handleBarCodeScanned = useCallback((result: BarcodeScanningResult) => {
     setScanned(true);
-    Alert.alert("Success", "Scanned successfully");
+
+    handleMarkAttendance(result.data);
   }, []);
+
+  const { mutate: handleMarkAttendance, isPending } = useMutation({
+    mutationKey: ["mark-attendance"],
+    mutationFn: async (qrCodeToken: string) => {
+      const token = SecureStore.getItem("token");
+      if (!token) {
+        throw new Error("Please login again");
+      }
+
+      const locationPermission = await Location.getForegroundPermissionsAsync();
+      if (!locationPermission.granted) {
+        throw new Error("Location permission is required tomark attendance");
+      }
+
+      const { coords } = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Highest,
+      });
+
+      const parsedData = await markAttendanceValidator.parseAsync({
+        qrCodeToken,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      });
+
+      const { data } = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/api/mark-attendance`,
+        { ...parsedData }
+      );
+
+      return data as { message: string };
+    },
+    onSuccess: (data) => {
+      Alert.alert("Success", data.message);
+    },
+    onError: (error) => {
+      if (error instanceof ZodError) {
+        Alert.alert("Error", error.errors[0].message);
+      } else if (error instanceof AxiosError && error.response?.data.error) {
+        Alert.alert("Error", error.response.data.error);
+      } else {
+        Alert.alert("Error", error.message);
+      }
+    },
+  });
 
   if (!permission) {
     return <View />;
@@ -42,7 +94,9 @@ const ScanQR = () => {
         <CameraView
           style={tw`w-full h-[60%] mt-[25%] items-center justify-center`}
           facing="back"
-          onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+          onBarcodeScanned={
+            scanned || isPending ? undefined : handleBarCodeScanned
+          }
         >
           <View style={tw`w-60 h-56 items-center justify-center`}>
             <View
@@ -67,7 +121,7 @@ const ScanQR = () => {
           onPress={() => {
             setScanned(false);
           }}
-          disabled={!scanned}
+          disabled={!scanned || isPending}
           textSize="sm"
         >
           Scan Again
