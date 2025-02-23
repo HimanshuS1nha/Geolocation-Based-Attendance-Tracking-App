@@ -54,7 +54,7 @@ const EmployeeAttendanceHistory = () => {
   return (
     <View style={tw`flex-1`}>
       {isLoading ? (
-        <ActivityIndicator size={30} color={"#4F46E5"} />
+        <ActivityIndicator size={40} color={"#4F46E5"} style={tw`mt-4`} />
       ) : attendanceRecords.length > 0 ? (
         <FlashList
           data={attendanceRecords}

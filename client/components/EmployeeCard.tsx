@@ -1,4 +1,12 @@
-import { View, Text, Image, Pressable, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Pressable,
+  Alert,
+  StyleProp,
+  PressableProps,
+} from "react-native";
 import React from "react";
 import tw from "twrnc";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -10,14 +18,19 @@ const EmployeeCard = ({
   employee,
   handleDelete,
   showOptions = true,
+  style,
 }: {
   employee: EmployeeType;
   handleDelete?: () => void;
   showOptions?: boolean;
+  style?: StyleProp<PressableProps>;
 }) => {
   return (
     <Pressable
-      style={tw`w-[95%] mb-4 p-3.5 bg-white items-center rounded-lg shadow shadow-black gap-y-4`}
+      style={[
+        tw`w-[95%] mb-4 p-3.5 bg-white items-center rounded-lg shadow shadow-black gap-y-4`,
+        style,
+      ]}
       onPress={() =>
         router.push({
           pathname: "/company/employee-wise-attendance-history",

@@ -50,7 +50,12 @@ const QrCode = () => {
             <QRCode value={data.qrToken} size={200} />
           </View>
 
-          <Button onPress={refetch} disabled={isLoading} textSize="sm">
+          <Button
+            onPress={refetch}
+            disabled={isLoading}
+            textSize="sm"
+            style={tw`w-[75%]`}
+          >
             Refresh QR Code
           </Button>
         </>

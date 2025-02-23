@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, Alert, ActivityIndicator } from "react-native";
 import React from "react";
 import tw from "twrnc";
-import { useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import * as SecureStore from "expo-secure-store";
@@ -59,8 +59,14 @@ const DateWiseAttendanceHistory = () => {
   }
   return (
     <View style={tw`flex-1`}>
+      <Stack.Screen
+        options={{
+          headerTitle: date,
+        }}
+      />
+
       {isLoading ? (
-        <ActivityIndicator size={40} />
+        <ActivityIndicator size={40} color={"#4F46E5"} style={tw`mt-4`} />
       ) : data && data.attendanceRecord ? (
         <ScrollView contentContainerStyle={tw`px-4 py-4 gap-y-7`}>
           <View style={tw`bg-white p-4 shadow shadow-black rounded-lg gap-y-5`}>
@@ -76,8 +82,18 @@ const DateWiseAttendanceHistory = () => {
                 <Text style={tw`text-rose-600 font-medium`}>Absent</Text>
               </View>
               <View style={tw`flex-row justify-between items-center`}>
-                <View style={tw`h-1 bg-emerald-600 w-[80%]`} />
-                <View style={tw`h-1 bg-rose-600 w-[20%]`} />
+                <View
+                  style={tw`h-1 bg-emerald-600 w-[${Math.floor(
+                    (data.attendanceRecord.presentEmployees.length * 100) /
+                      data.attendanceRecord.numberOfEmployees
+                  )}%]`}
+                />
+                <View
+                  style={tw`h-1 bg-rose-600 w-[${Math.floor(
+                    (data.attendanceRecord.absentEmployees.length * 100) /
+                      data.attendanceRecord.numberOfEmployees
+                  )}%]`}
+                />
               </View>
               <View style={tw`flex-row justify-between items-center`}>
                 <Text style={tw`text-emerald-600 font-medium`}>
@@ -97,13 +113,16 @@ const DateWiseAttendanceHistory = () => {
               Present Employees
             </Text>
 
-            <View style={tw`flex-row justify-center items-center gap-4`}>
+            <View
+              style={tw`flex-row flex-wrap justify-center items-center gap-4`}
+            >
               {data.attendanceRecord.presentEmployees.map((employee, i) => {
                 return (
                   <EmployeeCard
                     employee={employee}
                     key={i}
                     showOptions={false}
+                    style={tw`w-[45%]`}
                   />
                 );
               })}
@@ -115,9 +134,18 @@ const DateWiseAttendanceHistory = () => {
               Absent Employees
             </Text>
 
-            <View style={tw`flex-row justify-center items-center gap-4`}>
+            <View
+              style={tw`flex-row flex-wrap justify-center items-center gap-4`}
+            >
               {data.attendanceRecord.absentEmployees.map((employee, i) => {
-                return <EmployeeCard employee={employee} key={i} />;
+                return (
+                  <EmployeeCard
+                    employee={employee}
+                    key={i}
+                    showOptions={false}
+                    style={tw`w-[45%]`}
+                  />
+                );
               })}
             </View>
           </View>

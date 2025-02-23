@@ -92,6 +92,7 @@ loginRouter.post("/employee", async (req, res) => {
         email: employee.email,
         id: employee.id,
         image: employee.image,
+        designation: employee.designation,
         type: "employee",
       },
     });

@@ -1,7 +1,10 @@
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import React, { useMemo } from "react";
 import tw from "twrnc";
 import { AntDesign, Entypo } from "@expo/vector-icons";
+import { router } from "expo-router";
+
+import { useUser } from "@/hooks/useUser";
 
 import type { AttendanceRecordType } from "@/types";
 
@@ -12,6 +15,8 @@ const AttendanceRecordCard = ({
   attendanceRecord: AttendanceRecordType;
   type?: "employee" | "company";
 }) => {
+  const user = useUser((state) => state.user);
+
   const days = useMemo(
     () => [
       "Sunday",
@@ -25,8 +30,17 @@ const AttendanceRecordCard = ({
     []
   );
   return (
-    <View
+    <Pressable
       style={tw`bg-white p-3 rounded-lg shadow shadow-black flex-row justify-between items-center mb-4`}
+      onPress={() =>
+        user?.type === "company" &&
+        router.push({
+          pathname: "/company/date-wise-attendance-history",
+          params: {
+            date: attendanceRecord.date,
+          },
+        })
+      }
     >
       <View>
         <Text style={tw`text-base font-semibold`}>{attendanceRecord.date}</Text>
@@ -65,7 +79,7 @@ const AttendanceRecordCard = ({
           </Text>
         )}
       </View>
-    </View>
+    </Pressable>
   );
 };
 
