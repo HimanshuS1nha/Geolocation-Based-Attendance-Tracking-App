@@ -79,6 +79,8 @@ const AddEmployee = () => {
     },
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ["get-employees"] });
+      await queryClient.invalidateQueries({ queryKey: ["get-designations"] });
+
       Alert.alert("Success", data.message, [
         {
           text: "Ok",

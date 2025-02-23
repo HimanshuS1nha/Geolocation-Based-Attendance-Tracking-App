@@ -27,7 +27,7 @@ const EmployeeProfile = () => {
         title: "Change Password",
         Icon: Entypo,
         iconName: "lock",
-        onPress: () => {},
+        onPress: () => router.push("/employee/change-password"),
         variant: "default",
       },
       {

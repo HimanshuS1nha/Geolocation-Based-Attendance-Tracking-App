@@ -36,7 +36,7 @@ const Employees = () => {
   );
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: [`get-employee`],
+    queryKey: [`get-employees`],
     queryFn: async () => {
       const token = SecureStore.getItem("token");
       if (!token) {

@@ -20,7 +20,7 @@ import type { UserType } from "@/types";
 const EditEmployeeProfile = () => {
   const user = useUser((state) => state.user);
   const setUser = useUser((state) => state.setUser);
-
+  
   const [name, setName] = useState(user?.name ?? "");
   const [designation, setDesignation] = useState(user?.designation ?? "");
   const [fileName, setFileName] = useState("");
