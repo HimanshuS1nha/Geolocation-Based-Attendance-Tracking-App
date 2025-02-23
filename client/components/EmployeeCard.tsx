@@ -9,9 +9,11 @@ import type { EmployeeType } from "@/types";
 const EmployeeCard = ({
   employee,
   handleDelete,
+  showOptions = true,
 }: {
   employee: EmployeeType;
-  handleDelete: () => void;
+  handleDelete?: () => void;
+  showOptions?: boolean;
 }) => {
   return (
     <Pressable
@@ -33,39 +35,45 @@ const EmployeeCard = ({
         <Text style={tw`text-gray-700`}>{employee.designation}</Text>
       </View>
 
-      <View style={tw`flex-row gap-x-4 items-center`}>
-        <Pressable
-          onPress={() =>
-            router.push({
-              pathname: "/company/edit-employee",
-              params: {
-                id: employee.id,
-                name: employee.name,
-                designation: employee.designation,
-                email: employee.email,
-                image: employee.image,
-              },
-            })
-          }
-        >
-          <FontAwesome5 name="pencil-alt" size={20} color="blue" />
-        </Pressable>
-        <Pressable
-          onPress={() =>
-            Alert.alert("Warning", `Do you want to delete ${employee.name}?`, [
-              {
-                text: "No",
-              },
-              {
-                text: "Yes",
-                onPress: handleDelete,
-              },
-            ])
-          }
-        >
-          <FontAwesome5 name="trash" size={20} color="red" />
-        </Pressable>
-      </View>
+      {showOptions && (
+        <View style={tw`flex-row gap-x-4 items-center`}>
+          <Pressable
+            onPress={() =>
+              router.push({
+                pathname: "/company/edit-employee",
+                params: {
+                  id: employee.id,
+                  name: employee.name,
+                  designation: employee.designation,
+                  email: employee.email,
+                  image: employee.image,
+                },
+              })
+            }
+          >
+            <FontAwesome5 name="pencil-alt" size={20} color="blue" />
+          </Pressable>
+          <Pressable
+            onPress={() =>
+              Alert.alert(
+                "Warning",
+                `Do you want to delete ${employee.name}?`,
+                [
+                  {
+                    text: "No",
+                  },
+                  {
+                    text: "Yes",
+                    onPress: handleDelete,
+                  },
+                ]
+              )
+            }
+          >
+            <FontAwesome5 name="trash" size={20} color="red" />
+          </Pressable>
+        </View>
+      )}
     </Pressable>
   );
 };

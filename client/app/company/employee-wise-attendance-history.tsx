@@ -18,7 +18,7 @@ const EmployeeWiseAttendanceHistory = () => {
   const { id, name } = useLocalSearchParams() as { id: string; name: string };
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ["get-attendance-history"],
+    queryKey: ["get-employee-wise-attendance-history"],
     queryFn: async () => {
       const token = SecureStore.getItem("token");
       if (!token) {
