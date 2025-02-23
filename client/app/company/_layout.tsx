@@ -50,6 +50,13 @@ const CompanyStackLayout = () => {
             headerTitle: "QR Code",
           }}
         />
+
+        <Stack.Screen
+          name="attendance-history"
+          options={{
+            headerTitle: "Attendance History",
+          }}
+        />
       </Stack>
 
       <OfficeLocationModal />
