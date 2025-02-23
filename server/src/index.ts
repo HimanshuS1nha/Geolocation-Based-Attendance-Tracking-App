@@ -24,6 +24,7 @@ import { getDesignationsRouter } from "./routes/get-designations-route";
 import { getEmployeesRouter } from "./routes/get-employees-route";
 import { getAttendanceHistoryRouter } from "./routes/get-attendance-history-route";
 import { getQrCodeRouter } from "./routes/get-qr-code-route";
+import { markAttendanceRouter } from "./routes/mark-attendance-route";
 
 const app = express();
 const server = createServer(app);
@@ -53,6 +54,7 @@ app.use("/api/get-designations", getDesignationsRouter);
 app.use("/api/get-employees", getEmployeesRouter);
 app.use("/api/get-attendance-history", getAttendanceHistoryRouter);
 app.use("/api/get-qr-code", getQrCodeRouter);
+app.use("/api/mark-attendance", markAttendanceRouter);
 
 io.on("connection", async (socket) => {
   const { token } = socket.handshake.auth;
