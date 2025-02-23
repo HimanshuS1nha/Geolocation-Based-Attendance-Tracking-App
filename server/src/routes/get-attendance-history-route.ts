@@ -276,12 +276,14 @@ getAttendanceHistoryRouter.post("/company/date", async (req, res) => {
         id: string;
         name: string;
         image: string;
+        email: string;
         designation: string;
       }[];
       absentEmployees: {
         id: string;
         name: string;
         image: string;
+        email: string;
         designation: string;
       }[];
     } | null = null;
@@ -295,6 +297,7 @@ getAttendanceHistoryRouter.post("/company/date", async (req, res) => {
         name: true,
         image: true,
         designation: true,
+        email: true,
       },
     });
 
@@ -309,12 +312,14 @@ getAttendanceHistoryRouter.post("/company/date", async (req, res) => {
       name: string;
       image: string;
       designation: string;
+      email: string;
     }[] = [];
     const absentEmployees: {
       id: string;
       name: string;
       image: string;
       designation: string;
+      email: string;
     }[] = [];
 
     for (const employee of employees) {
